@@ -3,6 +3,11 @@
 
 #include "glfw.h"
 
+// Added C++ compatibility guards
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef unsigned char byte;
 
 typedef struct {
@@ -22,5 +27,9 @@ void fillCircle(float cx, float cy, float radius, int segments, GL2D_Color color
 
 void drawChar(float x, float y, char c, float scale, GL2D_Color color);
 void drawText(float x, float y, const char* text, float scale, GL2D_Color color);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

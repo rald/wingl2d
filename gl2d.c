@@ -38,12 +38,17 @@ int gl2dInit(int width, int height, const char* title) {
 }
 
 GL2D_Color gl2d_color(byte r, byte g, byte b, byte a) {
-    return (GL2D_Color){r, g, b, a};
+    GL2D_Color c;
+    c.r = r;
+    c.g = g;
+    c.b = b;
+    c.a = a;
+    return c;
 }
 
 void clearScreen(GL2D_Color color) {
     glClearColor(color.r/255.0f, color.g/255.0f, color.b/255.0f, color.a/255.0f);
-    glClear(GL_COLOR_BUFFER_BIT); // Fixed typo here
+    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void drawPoint(float x, float y, float size, GL2D_Color color) {
@@ -89,7 +94,7 @@ void drawCircle(float cx, float cy, float radius, int segments, float lineWidth,
     glColor4ub(color.r, color.g, color.b, color.a);
     glBegin(GL_LINE_LOOP);
     for (int i = 0; i < segments; i++) {
-        float theta = 2.0f * M_PI * (float)i / (float)segments;
+        float theta = 2.0f * (float)M_PI * (float)i / (float)segments;
         glVertex2f(cx + radius * cosf(theta), cy + radius * sinf(theta));
     }
     glEnd();
@@ -100,23 +105,19 @@ void fillCircle(float cx, float cy, float radius, int segments, GL2D_Color color
     glBegin(GL_TRIANGLE_FAN);
     glVertex2f(cx, cy);
     for (int i = 0; i <= segments; i++) {
-        float theta = 2.0f * M_PI * (float)i / (float)segments;
+        float theta = 2.0f * (float)M_PI * (float)i / (float)segments;
         glVertex2f(cx + radius * cosf(theta), cy + radius * sinf(theta));
     }
     glEnd();
 }
 
 void drawChar(float x, float y, char c, float scale, GL2D_Color color) {
-    // Cast char to unsigned to index the font array safely
     unsigned char uc = (unsigned char)c;
     if (uc > 127) uc = 0;
 
     for (int row = 0; row < 8; row++) {
         for (int col = 0; col < 8; col++) {
-            // Check if the bit for this pixel is set
-            // LSB is the leftmost pixel (col 0)
             if (font8x8_basic[uc][row] & (1 << col)) {
-                // Use fillRect to support scaling (e.g., scale=2.0f makes it 16x16)
                 fillRect(x + col * scale, y + row * scale, scale, scale, color);
             }
         }
@@ -126,7 +127,7 @@ void drawChar(float x, float y, char c, float scale, GL2D_Color color) {
 void drawText(float x, float y, const char* text, float scale, GL2D_Color color) {
     while (*text) {
         drawChar(x, y, *text, scale, color);
-        x += 8 * scale; // Move cursor right by 8 pixels * scale
+        x += 8 * scale;
         text++;
     }
 }
