@@ -1,7 +1,8 @@
 #include "gl2d.h"
 #include "font8x8.h"
+#include "sweetie-16.h"
 
-#include <math.h>
+#include <cmath>
 
 #ifndef M_PI
     #define M_PI 3.14159265358979323846
@@ -46,8 +47,8 @@ GL2D_Color gl2d_color(byte r, byte g, byte b, byte a) {
     return c;
 }
 
-void clearScreen(GL2D_Color color) {
-    glClearColor(color.r/255.0f, color.g/255.0f, color.b/255.0f, color.a/255.0f);
+void clearScreen() {
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
@@ -131,3 +132,26 @@ void drawText(float x, float y, const char* text, float scale, GL2D_Color color)
         text++;
     }
 }
+
+bool incirc(float x, float y, float cx, float cy, float cr) {
+    float dx = x - cx;
+    float dy = y - cy;
+    return (dx * dx + dy * dy) <= (cr * cr);
+}
+
+bool inrect(float x, float y, float rx, float ry, float rw, float rh) {
+    return x >= rx && x <= rx + rw && 
+           y >= ry && y <= ry + rh;
+}
+
+GL2D_Color getSweetie(int index) {
+    if (index < 0 || index > 15) return gl2d_color(0, 0, 0, 255);
+    
+    return gl2d_color(
+        (byte)sweetie[index][0], 
+        (byte)sweetie[index][1], 
+        (byte)sweetie[index][2], 
+        (byte)sweetie[index][3]
+    );
+}
+
