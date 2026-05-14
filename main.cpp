@@ -1,22 +1,32 @@
+#include "gl2d.h"
+
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
 
-#include "gl2d.h"
-
-#define GAME_TITLE "GL2D Testing"
+#define GAME_TITLE "GL2D Test"
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
-
-#define NBALLS 10
 
 bool quit = false;
 
 float x, y;
 
+float tx,ty;
+float tdx,tdy;
+float speed;
+
+
+
 void setup(void) {
-    
+    tx=(SCREEN_WIDTH-11*8*2)/2;
+    ty=(SCREEN_HEIGHT-8*2)/2;
+    speed=3;
+    tdx=speed;
+    tdy=speed;    
 }
+
+
 
 void loop(void) {
 	clearScreen(gl2d_color(0x00, 0x00, 0x00, 0xFF));
@@ -39,8 +49,19 @@ void loop(void) {
     x += 32.0f + 8.0f;
     fillCircle(x, y, 16.0f, 32.0f, gl2d_color(255, 255, 255, 255));    
     
-    drawText(16.0f, 128.0f, "Hello World", 2.0f, gl2d_color(255, 255, 255, 255));
+    drawText(tx, ty, "Hello World", 2.0f, gl2d_color(255, 255, 255, 255));
+    
+    tx+=tdx;
+	ty+=tdy;
+
+    if(tx<0) { tx=0; tdx=speed; }
+    if(tx>SCREEN_WIDTH-11*8*2) { tx=SCREEN_WIDTH-11*8*2; tdx=-speed; }
+    
+    if(ty<0) { ty=0; tdy=speed; }
+    if(ty>SCREEN_HEIGHT-8*2) { ty=SCREEN_HEIGHT-8*2; tdy=-speed; }
 }
+
+
 
 int main(void) {
 	
